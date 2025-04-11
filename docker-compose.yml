@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - db
+
+  dashboard:
+    build:
+      context: .
+    command: streamlit run dashboard/app.py
+    ports:
+      - "8501:8501"
+
+  redis:
+    image: redis:alpine
+
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: feedback_db
